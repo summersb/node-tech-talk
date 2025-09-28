@@ -1,0 +1,47 @@
+### login
+# @name login
+POST http://localhost:{{port}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "mypassword"
+}
+
+### post new recipe
+# @name createRecipe
+POST http://localhost:{{port}}/recipe
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "title": "Pasta Salad",
+  "ingredients": [
+    { "amount": "200g", "name": "Pasta" },
+    { "amount": "100g", "name": "Tomatoes" }
+  ],
+  "instructions": [
+    {"step_number": 1, "text":"Boil pasta"},
+    {"step_number": 2, "text":"Mix with tomatoes"},
+    {"step_number": 3, "text":"Serve"}
+  ]
+}
+
+### Get a recipe
+GET http://localhost:{{port}}/recipe/{{createRecipe.response.body.recipeId}}
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+### Delete a recipe
+DELETE http://localhost:{{port}}/recipe/{{createRecipe.response.body.recipeId}}
+Authorization: Bearer {{login.response.body.token}}
+
+### List All Recipes
+# @name listRecipes
+GET http://localhost:{{port}}/recipes
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+### Delete a recipe from list
+DELETE http://localhost:{{port}}/recipe/{{listRecipes.response.body.$[0].id}}
+Authorization: Bearer {{login.response.body.token}}

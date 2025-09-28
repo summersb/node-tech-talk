@@ -1,0 +1,58 @@
+### login
+POST http://localhost:{{port}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "mypassword"
+}
+
+> {%
+  client.global.set("authToken", response.body.token);
+%}
+
+### post new recipe
+POST http://localhost:{{port}}/recipe
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "Pasta Salad",
+  "ingredients": [
+    { "amount": "200g", "name": "Pasta" },
+    { "amount": "100g", "name": "Tomatoes" }
+  ],
+  "instructions": [
+    {"step_number": 1, "text":"Boil pasta"},
+    {"step_number": 2, "text":"Mix with tomatoes"},
+    {"step_number": 3, "text":"Serve"}
+  ]
+}
+
+> {%
+  client.global.set("id", response.body.recipeId)
+%}
+
+### Get a recipe
+GET http://localhost:{{port}}/recipe/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Delete a recipe
+# @name deleteRecipe
+DELETE http://localhost:{{port}}/recipe/{{id}}
+Authorization: Bearer {{authToken}}
+
+### List All Recipes and delete them
+GET http://localhost:{{port}}/recipes
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+> {%
+  // parse the JSON response
+  const recipes = response.body;
+
+  // store the array of IDs as a global so other requests can use it
+  client.global.set("recipeIds", recipes.map(r => r.id));
+  client.global.set("id", recipes[0].id)
+%}

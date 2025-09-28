@@ -1,0 +1,31 @@
+module.exports = {
+  root: true,
+  parser: '@typescript-eslint/parser', // Specifies the ESLint parser for TypeScript
+  parserOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'module',
+  },
+  env: {
+    node: true,
+    es2021: true,
+  },
+  plugins: ['@typescript-eslint', 'prettier', 'node'],
+  extends: [
+    'eslint:recommended', // Recommended ESLint rules
+    'plugin:@typescript-eslint/recommended', // Recommended TypeScript rules
+    'plugin:prettier/recommended', // Enables eslint-plugin-prettier and prettier config
+  ],
+  settings: {
+    node: {
+      version: '>=24.0.0',
+    }
+  },
+  rules: {
+    // Turn off rules you don't want
+    'prettier/prettier': ['error', { semi: false }],
+    '@typescript-eslint/no-unused-vars': ['warn'],
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'node/no-unsupported-features/es-syntax': ['error', { ignores: ['modules'] }],
+  },
+  ignorePatterns: ['dist/', 'node_modules/'],
+}
